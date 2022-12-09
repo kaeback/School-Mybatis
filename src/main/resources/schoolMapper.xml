@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.dao.SchoolMapper">
+	<!-- person 등록 -->
+	<insert id="addPerson" parameterType="person">
+		<selectKey keyProperty="seq_per" resultType="int" order="BEFORE">
+			select nextval(seq_school)
+		</selectKey>
+		insert into person (
+			seq_per,
+			ssn,
+			name,
+			age,
+			type
+		) values (
+			#{seq_per},
+			#{ssn},
+			#{name},
+			#{age},
+			#{type}
+		)
+	</insert>
+	
+	<!-- stduent 등록 -->
+	<insert id="addStudent">
+		<selectKey keyProperty="seq_stu" resultType="int" order="BEFORE">
+			select nextval(seq_school)
+		</selectKey>
+		insert into student (
+			seq_stu,
+			seq_per,
+			stdno
+		) values (
+			#{seq_stu},
+			#{seq_per},
+			#{stdNo}
+		)
+	</insert>
+	
+	<!-- teacher 등록 -->
+	<insert id="addTeacher">
+		<selectKey keyProperty="seq_tea" resultType="int" order="BEFORE">
+			select nextval(seq_school)
+		</selectKey>
+		insert into teacher (
+			seq_tea,
+			seq_per,
+			major
+		) values (
+			#{seq_tea},
+			#{seq_per},
+			#{major}
+		)
+	</insert>
+	
+	<!-- staff 등록 -->
+	<insert id="addStaff">
+		<selectKey keyProperty="seq_sta" resultType="int" order="BEFORE">
+			select nextval(seq_school)
+		</selectKey>
+		insert into staff (
+			seq_sta,
+			seq_per,
+			stdno
+		) values (
+			#{seq_sta},
+			#{seq_per},
+			#{dept}
+		)
+	</insert>
+	
+	<select id="findPersonBySsn" resultType="person">
+		select * from person where ssn = #{ssn}
+	</select>
+
+	<select id="findStudent" resultType="student">
+		select
+			p.seq_per,
+			p.name,
+			p.ssn,
+			p.age,
+			p.type,
+			s.seq_stu,
+			s.stdno
+		from
+			person p,
+			student s
+		where
+			p.seq_per = s.seq_per
+		<if test="ssn != null">
+			and p.ssn = #{ssn}
+		</if>
+	</select>
+
+	<select id="findTeacher" resultType="teacher">
+		select
+			p.seq_per,
+			p.name,
+			p.ssn,
+			p.age,
+			p.type,
+			t.seq_tea,
+			t.major
+		from
+			person p,
+			teacher t
+		where
+			p.seq_per = t.seq_per
+			<if test="ssn != null">
+				and p.ssn = #{ssn}
+			</if>
+	</select>
+
+	<select id="findStaff" resultType="staff">
+		select
+			p.seq_per,
+			p.name,
+			p.ssn,
+			p.age,
+			p.type,
+			s.seq_sta,
+			s.dept
+		from
+			person p,
+			staff s
+		where
+			p.seq_per = s.seq_per
+			<if test="ssn != null">
+				and p.ssn = #{ssn}
+			</if>
+	</select>
+
+	<update id="updatePerson">
+		update person
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="age != null">age = #{age}</if>
+		</set>
+		where
+			seq_per = #{seq_per}
+	</update>
+
+	<update id="updateStudent">
+		update student
+		<set>
+			<if test="stdNo != null">stdno = #{stdNo}</if>
+		</set>
+		where
+			seq_per = #{seq_per}
+	</update>
+
+	<update id="updateTeacher">
+		update teacher
+		<set>
+			<if test="major != null">major = #{major}</if>
+		</set>
+		where
+		seq_per = #{seq_per}
+	</update>
+
+	<update id="updateStaff">
+		update staff
+		<set>
+			<if test="dept != null">dept = #{dept}</if>
+		</set>
+		where
+		seq_per = #{seq_per}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
